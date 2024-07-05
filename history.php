@@ -1,11 +1,9 @@
 <?php
 include 'config.php';
-
 session_start();
-
 include 'auth_admincheck.php';
 
-$view = $dbconnect->query("SELECT * FROM transaksi ORDER BY DATE(tanggal_waktu), id_transaksi");
+$view = $dbconnect->query("SELECT * FROM transaksi ORDER BY tanggal_waktu DESC, id_transaksi");
 
 if (!$view) {
     die("Error menjalankan query: " . $dbconnect->error);
@@ -21,25 +19,9 @@ if (!$view) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-    <script src="style/admin.js" ></script>
+    <script src="style/admin.js"></script>
     <link rel="stylesheet" href="style/admin-flex.css">
     <link rel="stylesheet" href="style/admin.css">  
-    <style>
-        .input-field {
-        position: relative;
-        display: inline-block;
-
-    }
-
-        .input-field > label {
-            position: absolute;
-            left: 0.5em;
-            top: 50%;
-            margin-top: -0.5em;
-            opacity: 0.5;
-        }
-
-    </style>
 </head>
 
 <body>
@@ -89,7 +71,9 @@ if (!$view) {
                                 <h1>Riwayat Transaksi</h1>
                                 <p>Pilih tanggal transaksi</p>
                                 <div class=" input-field input-group mb-3 w-50 ">
-                                    <input type="date" class="form-control w-50 shadow-sm " id="datePicker" onchange="filterByDate()" />
+                                    <button class="btn btn-secondary " onclick="previousDate()">&lt;&lt;</button>
+                                    <input type="date" class="border shadow-sm ps-3" id="datePicker" onchange="filterByDate()" />
+                                    <button class="btn btn-secondary " onclick="nextDate()"> &gt;&gt;</button>
                                 </div>
                             </div>
                         </div>
@@ -119,10 +103,10 @@ if (!$view) {
                                     <th class='ps-3'>ID Transaksi</th>
                                     <th>Waktu Transaksi</th>
                                     <th>Nomor Transaksi</th>
+                                    <th>Nomor Customer</th>
                                     <th>Total Harga</th>
                                     <th>Nama Kasir</th>
-                                    <th>Jumlah Bayar</th>
-                                    <th>Kembalian</th>
+                                    <th>Aksi</th>
                                 </tr>
                               </thead>
                               <tbody>";
@@ -131,10 +115,10 @@ if (!$view) {
                             <th class='ps-5'>{$row['id_transaksi']}</th>
                             <td>{$row['tanggal_waktu']}</td>
                             <td>{$row['nomor_transaksi']}</td>
+                            <td>{$row['no_customer']}</td>
                             <td>{$row['total']}</td>
                             <td>{$row['nama_user']}</td>
-                            <td>{$row['bayar']}</td>
-                            <td>{$row['kembali']}</td>
+                            <td><a href='history_detail.php?id={$row['id_transaksi']}' class='btn btn-info'>Lihat Detail</a></td>
                           </tr>";
                 }
                 if ($current_date != "") {
@@ -161,9 +145,23 @@ if (!$view) {
                 }
             });
         }
+
+        function previousDate() {
+            var datePicker = document.getElementById("datePicker");
+            var currentDate = new Date(datePicker.value);
+            var previousDate = new Date(currentDate.setDate(currentDate.getDate() - 1)).toISOString().split('T')[0];
+            datePicker.value = previousDate;
+            filterByDate();
+        }
+
+        function nextDate() {
+            var datePicker = document.getElementById("datePicker");
+            var currentDate = new Date(datePicker.value);
+            var nextDate = new Date(currentDate.setDate(currentDate.getDate() + 1)).toISOString().split('T')[0];
+            datePicker.value = nextDate;
+            filterByDate();
+        }
     </script>
-        </div>
-    </div>
 </body>
 
 </html>
