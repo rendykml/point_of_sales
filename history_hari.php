@@ -16,6 +16,12 @@ $view = $dbconnect->query("SELECT * FROM transaksi WHERE DATE(tanggal_waktu) = '
 if (!$view) {
     die("Error menjalankan query: " . $dbconnect->error);
 }
+
+$total_pemasukan_harian = 0;
+while ($row = $view->fetch_array()) {
+    $total_pemasukan_harian += $row['total'];
+    $rows[] = $row;
+}
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +36,6 @@ if (!$view) {
     <link rel="stylesheet" href="style/admin.css">
     <style>
         a {
-            
             color: black;
         }
     </style>
@@ -38,7 +43,7 @@ if (!$view) {
 
 <body onload="window.print()">
     <div class="container">
-        <div class="table-responsive mt-4 ">
+        <div class="table-responsive mt-4">
             <a class="text-center" href="history.php"><h2>Riwayat Transaksi - <?= date('d M Y', strtotime($date)) ?></h2></a>
             <table class="table align-middle mt-3">
                 <thead class="table-light">
@@ -53,7 +58,7 @@ if (!$view) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = $view->fetch_array()) { ?>
+                    <?php foreach ($rows as $row) { ?>
                         <tr>
                             <th class="ps-5"><?= $row['id_transaksi'] ?></th>
                             <td><?= $row['tanggal_waktu'] ?></td>
@@ -66,6 +71,9 @@ if (!$view) {
                     <?php } ?>
                 </tbody>
             </table>
+            <div class='text-end me-5'>
+                <strong>Total Pemasukan: <?= number_format($total_pemasukan_harian, 2); ?></strong>
+            </div>
         </div>
     </div>
 </body>
