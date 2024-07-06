@@ -15,7 +15,10 @@ if (!$total_per_day_query) {
     die("Error menjalankan query: " . $dbconnect->error);
 }
 
-
+$total_per_day = [];
+while ($row = $total_per_day_query->fetch_assoc()) {
+    $total_per_day[$row['tanggal']] = $row['total_pemasukan'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +52,6 @@ if (!$total_per_day_query) {
             </ul>
         </div>
 
-
         <div class="content">
             <nav class="navbar navbar-expand-lg bg-light " id="top_nav">
                 <div class="container-fluid pt-2 ps-4">
@@ -75,6 +77,7 @@ if (!$total_per_day_query) {
                     </div>
                 </div>
             </nav>
+
             <!-- konten riwayat transaksi -->
             <div class="container mt-4">
                 <div class="row">
@@ -83,10 +86,10 @@ if (!$total_per_day_query) {
                             <div class="container ms-1 mt-1">
                                 <h1>Riwayat Transaksi</h1>
                                 <p>Pilih tanggal transaksi</p>
-                                <div class=" input-field input-group mb-3 w-50 ">
-                                    <button class="btn btn-secondary " onclick="previousDate()">&lt;&lt;</button>
+                                <div class="input-field input-group mb-3 w-50 ">
+                                    <button class="btn btn-secondary" onclick="previousDate()">&lt;&lt;</button>
                                     <input type="date" class="border shadow-sm ps-3" id="datePicker" onchange="filterByDate()" />
-                                    <button class="btn btn-secondary " onclick="nextDate()"> &gt;&gt;</button>
+                                    <button class="btn btn-secondary" onclick="nextDate()"> &gt;&gt;</button>
                                 </div>
                             </div>
                         </div>
@@ -95,64 +98,68 @@ if (!$total_per_day_query) {
             </div>
 
             <div class="container mt-3" id="transaction-container">
-
                 <?php
                 $current_date = "";
                 while ($row = $view->fetch_array()) {
                     $date = date('Y-m-d', strtotime($row['tanggal_waktu']));
                     if ($date != $current_date) {
                         if ($current_date != "") {
-                            echo "</tbody></table>
-                                  <div class='text-end mb-1'>
-                                      <a href='history_hari.php?date=$current_date' class='btn btn-primary'>Cetak Data</a>
-                                  </div>
-                                  </div>";
+                ?>
+                            <tr>
+                                <td colspan="5" class="text-end text-success "><b>Total Pemasukan:</b></td>
+                                <td class=" text-success " ><b><?= number_format($total_per_day[$current_date], 2); ?></b></td>
+                                <td><a href='history_hari.php?date=<?= $current_date; ?>' class='btn btn-primary'>Cetak Data</a></td>
+                            </tr>
+                            </tbody>
+                            </table>
+                            </div>
+                <?php
                         }
                         $current_date = $date;
-                        echo "<div class='table-responsive' data-date='$current_date'>";
-                        echo "<h2>" . date('d M Y', strtotime($current_date)) . "</h2>";
-                        echo "<table class='table align-middle'>";
-                        echo "<thead class='table-light'>
-                                <tr>
-                                    <th class='ps-3'>ID Transaksi</th>
-                                    <th>Waktu Transaksi</th>
-                                    <th>Nomor Transaksi</th>
-                                    <th>Nomor Customer</th>
-                                    <th>Total Harga</th>
-                                    <th>Nama Kasir</th>
-                                    <th>Aksi</th>
-                                </tr>
-                              </thead>
-                              <tbody>";
+                ?>
+                        <div class='table-responsive' data-date='<?= $current_date; ?>'>
+                            <h2><?= date('d M Y', strtotime($current_date)); ?></h2>
+                            <table class='table align-middle'>
+                                <thead class='table-light'>
+                                    <tr>
+                                        <th class='ps-3'>ID Transaksi</th>
+                                        <th>Waktu Transaksi</th>
+                                        <th>Nomor Transaksi</th>
+                                        <th>Nomor Customer</th>
+                                        <th>Nama Kasir</th>
+                                        <th>Total Harga</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                <?php
                     }
-                    echo "<tr>
-                            <th class='ps-5'>{$row['id_transaksi']}</th>
-                            <td>{$row['tanggal_waktu']}</td>
-                            <td>{$row['nomor_transaksi']}</td>
-                            <td>{$row['no_customer']}</td>
-                            <td>{$row['total']}</td>
-                            <td>{$row['nama_user']}</td>
-                            <td><a href='history_detail.php?id={$row['id_transaksi']}' class='btn btn-info'>Lihat Detail</a></td>
-                          </tr>";
+                ?>
+                    <tr>
+                        <th class='ps-5'><?= $row['id_transaksi']; ?></th>
+                        <td><?= $row['tanggal_waktu']; ?></td>
+                        <td><?= $row['nomor_transaksi']; ?></td>
+                        <td><?= $row['no_customer']; ?></td>
+                        <td><?= $row['nama_user']; ?></td>
+                        <td><?= number_format($row['total'], 2); ?></td>
+                        <td><a href='history_detail.php?id=<?= $row['id_transaksi']; ?>' class='btn btn-info'>Lihat Detail</a></td>
+                    </tr>
+                <?php
                 }
-
-                while ($row = $total_per_day_query->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td class='bg-success text-white'><b>Total Pemasukan Hari Ini =</td>";
-                    echo "<td>" . number_format($row['total_pemasukan'], 2) . "</td>";
-                    echo "</tr>";
-                }
-
                 if ($current_date != "") {
-                    echo "</tbody></table>
-                          <div class='text-end mb-2'>
-                              <a href='history_hari.php?date=$current_date' class='btn btn-primary'>Cetak Data</a>
-                          </div>
-                          </div>";
+                ?>
+                    <tr>
+                        <td colspan="5" class="text-end text-success "><b>Total Pemasukan:</b></td>
+                        <td ><b class="text-success" ><?= number_format($total_per_day[$current_date], 2); ?></b></td>
+                        <td><a href='history_hari.php?date=<?= $current_date; ?>' class='btn btn-primary'>Cetak Data</a></td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                <?php
                 }
                 ?>
             </div>
-
         </div>
     </div>
 
