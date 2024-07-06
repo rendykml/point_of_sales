@@ -8,6 +8,14 @@ $view = $dbconnect->query("SELECT * FROM transaksi ORDER BY tanggal_waktu DESC, 
 if (!$view) {
     die("Error menjalankan query: " . $dbconnect->error);
 }
+
+$total_per_day_query = $dbconnect->query("SELECT DATE(tanggal_waktu) as tanggal, SUM(total) as total_pemasukan FROM transaksi GROUP BY DATE(tanggal_waktu) ORDER BY tanggal DESC");
+
+if (!$total_per_day_query) {
+    die("Error menjalankan query: " . $dbconnect->error);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +29,7 @@ if (!$view) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script src="style/admin.js"></script>
     <link rel="stylesheet" href="style/admin-flex.css">
-    <link rel="stylesheet" href="style/admin.css">  
+    <link rel="stylesheet" href="style/admin.css">
 </head>
 
 <body>
@@ -41,10 +49,13 @@ if (!$view) {
             </ul>
         </div>
 
+
         <div class="content">
             <nav class="navbar navbar-expand-lg bg-light " id="top_nav">
                 <div class="container-fluid pt-2 ps-4">
-                    <a class="navbar-brand text-black" href="index.php"><h4><i>Point Of Sales</i></h4></a>
+                    <a class="navbar-brand text-black" href="index.php">
+                        <h4><i>Point Of Sales</i></h4>
+                    </a>
                     <div class="collapse navbar-collapse justify-content-end">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li class="nav-item dropdown profile-dropdown p-1 me-2">
@@ -54,7 +65,9 @@ if (!$view) {
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                                     <li><a class="dropdown-item" href="index.php"><?= $_SESSION['nama_user']; ?></a></li>
                                     <li><a class="dropdown-item" href="index.php">user : <?= $_SESSION['username']; ?></a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
                                 </ul>
                             </li>
@@ -62,7 +75,7 @@ if (!$view) {
                     </div>
                 </div>
             </nav>
-<!-- konten riwayat transaksi -->
+            <!-- konten riwayat transaksi -->
             <div class="container mt-4">
                 <div class="row">
                     <div class="col-12">
@@ -82,6 +95,7 @@ if (!$view) {
             </div>
 
             <div class="container mt-3" id="transaction-container">
+
                 <?php
                 $current_date = "";
                 while ($row = $view->fetch_array()) {
@@ -121,6 +135,14 @@ if (!$view) {
                             <td><a href='history_detail.php?id={$row['id_transaksi']}' class='btn btn-info'>Lihat Detail</a></td>
                           </tr>";
                 }
+
+                while ($row = $total_per_day_query->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td class='bg-success text-white'><b>Total Pemasukan Hari Ini =</td>";
+                    echo "<td>" . number_format($row['total_pemasukan'], 2) . "</td>";
+                    echo "</tr>";
+                }
+
                 if ($current_date != "") {
                     echo "</tbody></table>
                           <div class='text-end mb-2'>
@@ -130,6 +152,7 @@ if (!$view) {
                 }
                 ?>
             </div>
+
         </div>
     </div>
 
