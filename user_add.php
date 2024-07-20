@@ -30,7 +30,7 @@ if (isset($_POST['simpan'])) {
         if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
             $_SESSION['error'] = "Gagal menambahkan user (username sudah ada)";
         } else {
-            $_SESSION['error'] = "Gagal menambahkan user (".$e->getMessage().")";
+            $_SESSION['error'] = "Gagal menambahkan user (" . $e->getMessage() . ")";
         }
     }
 
@@ -50,11 +50,11 @@ if (isset($_POST['simpan'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-    <script src="style/admin.js" ></script>
+    <script src="style/admin.js"></script>
     <link rel="stylesheet" href="style/admin-flex.css">
     <link rel="stylesheet" href="style/admin.css">
-   
-  
+
+
     </style>
 </head>
 
@@ -77,8 +77,10 @@ if (isset($_POST['simpan'])) {
 
         <div class="content">
             <nav class="navbar navbar-expand-lg bg-light " id="top_nav">
-                <div class="container-fluid pt-2 ps-4 " >
-                    <a class="navbar-brand text-black" href="index.php"><h4><i>Point Of Sales</i></h4></a>
+                <div class="container-fluid pt-2 ps-4 ">
+                    <a class="navbar-brand text-black" href="index.php">
+                        <h4><i>Point Of Sales</i></h4>
+                    </a>
                     <div class="collapse navbar-collapse justify-content-end">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li class="nav-item dropdown profile-dropdown p-1 me-2">
@@ -88,7 +90,9 @@ if (isset($_POST['simpan'])) {
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                                     <li><a class="dropdown-item" href="index.php"><?= $_SESSION['nama_user']; ?></a></li>
                                     <li><a class="dropdown-item" href="index.php">user : <?= $_SESSION['username']; ?></a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
                                 </ul>
                             </li>
@@ -102,49 +106,58 @@ if (isset($_POST['simpan'])) {
                         <h1>Tambah User</h1>
                     </div>
                     <div class="card-body">
-                    <form action="" method="post">
-                        <div class="form-group mb-4">
-                            <label>Nama User :</label>
-                            <input type="text" name="nama_user" class="form-control" placeholder="" required>
-                        </div>
-                        <div class="input-group mb-4">
-                            <span class="input-group-text" id="basic-addon1">@</span>
-                            <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-                            <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" name="password" class="form-control" placeholder="masukan password" aria-label="Recipient's username" aria-describedby="basic-addon2" required >
-                           
-                        </div>   
-                        
-                        <div class="input-group mb-4">
-                            <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-key fa-fade"></i></label>
-                            <select class="form-select" id="inputGroupSelect01" name="role_id" required>
-                                <option value="">Pilih Role</option>
-                                <?php
-                                while ($row = mysqli_fetch_array($role)) { ?>
-                                    <option value="<?= $row['id_role'] ?>"><?= $row['nama']?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="form-group mb-4">
-                            <label><i class="fa-solid fa-phone ms-2 me-1"></i> Nomor HP :</label>
-                            <input type="text" name="nomor_handphone" class="form-control" placeholder="(+62)8" pattern="\+62[0-9]{8,12}" required>
-                            <small class="form-text text-muted">*harus 8-12 digit</small>
-                        </div>
-                        <div class="form-group mb-4">
-                            <label><i class="fa-solid fa-location-dot ms-2 fa-"></i> Alamat :</label>
-                            <input type="text" name="alamat" class="form-control" placeholder="" required>
-                        </div>
-                        <div class="d-flex">
-                            <input type="submit" name="simpan" value="Simpan" class="btn btn-primary me-2">
-                            <a href="user.php" class="btn btn-warning">Kembali</a>
-                        </div>
-                    </form>
+                        <form action="" method="post">
+                            <div class="form-group mb-4">
+                                <label>Nama User :</label>
+                                <input type="text" name="nama_user" class="form-control" placeholder="" required>
+                            </div>
+                            <div class="input-group mb-4">
+                                <span class="input-group-text" id="basic-addon1">@</span>
+                                <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                                <span class="input-group-text" id="basic-addon2"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" name="password" class="form-control" placeholder="masukan password" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+
+                            </div>
+
+                            <div class="input-group mb-4">
+                                <label class="input-group-text" for="inputGroupSelect01"><i class="fa-solid fa-key fa-fade"></i></label>
+                                <select class="form-select" id="inputGroupSelect01" name="role_id" required>
+                                    <option value="">Pilih Role</option>
+                                    <?php
+                                    while ($row = mysqli_fetch_array($role)) { ?>
+                                        <option value="<?= $row['id_role'] ?>"><?= $row['nama'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label><i class="fa-solid fa-phone ms-2 me-1"></i> Nomor HP :</label>
+                                <input type="text" name="nomor_handphone" class="form-control" placeholder="(+62)8" pattern="\+62[0-9]{8,12}" required>
+                                <small class="form-text text-muted">*harus 8-12 digit</small>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label><i class="fa-solid fa-location-dot ms-2 fa-"></i> Alamat :</label>
+                                <!-- regex html format jalan pattern menggunakan Jl. -->
+                                <input type="text" name="alamat" class="form-control" placeholder="" id="alamat" pattern="^Jl\..*" title="Alamat harus diawali dengan 'Jl.'" required>
+                            </div>
+                            <div class="d-flex">
+                                <input type="submit" name="simpan" value="Simpan" class="btn btn-primary me-2">
+                                <a href="user.php" class="btn btn-warning">Kembali</a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            
-            
-    </div>
+
+
+        </div>
+        <script>
+            // JS auto huruf kapital diawal kata untuk alamat
+            document.getElementById('alamat').addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\b\w/g, function(char) {
+                    return char.toUpperCase();
+                });
+            });
+        </script>
 </body>
 
 </html>

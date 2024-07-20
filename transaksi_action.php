@@ -45,6 +45,10 @@ if (mysqli_query($dbconnect, $query_transaksi)) {
         )";
 
         mysqli_query($dbconnect, $query_detail);
+
+        // Update jumlah produk di database
+        $query_update_stok = "UPDATE produk SET jumlah = jumlah - $jumlah WHERE id_produk = '$id_produk'";
+        mysqli_query($dbconnect, $query_update_stok);
     }
 
     $_SESSION['cart'] = [];
@@ -54,4 +58,3 @@ if (mysqli_query($dbconnect, $query_transaksi)) {
     // Tangani error, misalnya log pesan error
     echo "Error: " . mysqli_error($dbconnect);
 }
-?>

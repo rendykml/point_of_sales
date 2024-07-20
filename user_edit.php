@@ -77,11 +77,11 @@ if (isset($_POST['update'])) { // Jika form disubmit dengan tombol "Update"
         <h1>Perbaharui User</h1>
 
         <form method="post">
-        <?php if (isset($_SESSION['error']) && $_SESSION['error'] != '') { ?>
-        <div class="alert alert-danger" role="alert">
-            <?= $_SESSION['error'] ?>
-        </div>
-        <?php } ?>
+            <?php if (isset($_SESSION['error']) && $_SESSION['error'] != '') { ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= $_SESSION['error'] ?>
+                </div>
+            <?php } ?>
             <input type="hidden" name="id_user" value="<?= isset($data['id_user']) ? $data['id_user'] : '' ?>">
             <div class="form-group">
                 <label>Nama User</label>
@@ -113,13 +113,21 @@ if (isset($_POST['update'])) { // Jika form disubmit dengan tombol "Update"
             </div>
             <div class="form-group">
                 <label>Alamat</label>
-                <input type="text" name="alamat" class="form-control" placeholder="alamat" value="<?= isset($data['alamat']) ? $data['alamat'] : '' ?>" required>
+                <input type="text" name="alamat" class="form-control" id="alamat" pattern="^Jl\..*" title="Alamat harus diawali dengan 'Jl.'" placeholder="alamat" value=" <?= isset($data['alamat']) ? $data['alamat'] : '' ?>" required>
             </div>
             <input type="submit" name="update" value="Perbaharui" class="btn btn-primary">
             <a href="user.php" class="btn btn-warning">Kembali</a>
         </form>
     </div>
 </body>
+<script>
+    // Auto capitalize first letter of each word for address input
+    document.getElementById('alamat').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\b\w/g, function(char) {
+            return char.toUpperCase();
+        });
+    });
+</script>
 
 </html>
 <?php

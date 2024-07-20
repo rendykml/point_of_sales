@@ -31,17 +31,18 @@ $detail = mysqli_query($dbconnect, "SELECT transaksi_detail.*, produk.nama_produ
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Struk Kasir</title>
-    
+
     <style type="text/css">
         body {
             color: #a7a7a7;
         }
+
         a {
-            
+
             color: #a7a7a7;
         }
     </style>
-    
+
 </head>
 
 <body>
@@ -72,7 +73,7 @@ $detail = mysqli_query($dbconnect, "SELECT transaksi_detail.*, produk.nama_produ
             <?php while ($row = mysqli_fetch_array($detail)) { ?>
                 <tr>
                     <td><?= $row['nama_produk'] ?></td>
-                    <td><?= $row['jumlah'] ?> item</td>
+                    <td><?= $row['jumlah'] ?> Pcs</td>
                     <td align="right">harga satuan <?= number_format($row['harga']) ?></td>
                     <td align="right"><?= number_format($row['total']) ?></td>
                 </tr>

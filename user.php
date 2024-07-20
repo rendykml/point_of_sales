@@ -9,7 +9,8 @@ session_start();
 
 include 'auth_admincheck.php';
 
-$view = $dbconnect->query("SELECT u.*, r.nama as nama_role FROM user_pengguna as u INNER JOIN role as r ON u.role_id = r.id_role");
+// $view = $dbconnect->query("SELECT u.*, r.nama as nama_role FROM user_pengguna as u INNER JOIN role as r ON u.role_id = r.id_role");
+$view = $dbconnect->query("SELECT user_pengguna.*, role.nama FROM user_pengguna INNER JOIN role ON user_pengguna.role_id = role.id_role");
 
 if (!$view) {
     die("Error menjalankan query: " . $dbconnect->error);
@@ -25,11 +26,11 @@ if (!$view) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-    <script src="style/admin.js" ></script>
+    <script src="style/admin.js"></script>
     <link rel="stylesheet" href="style/admin-flex.css">
     <link rel="stylesheet" href="style/admin.css">
-   
-  
+
+
     </style>
 </head>
 
@@ -52,8 +53,10 @@ if (!$view) {
 
         <div class="content">
             <nav class="navbar navbar-expand-lg bg-light " id="top_nav">
-                <div class="container-fluid pt-2 ps-4 " >
-                    <a class="navbar-brand text-black" href="index.php"><h4><i>Point Of Sales</i></h4></a>
+                <div class="container-fluid pt-2 ps-4 ">
+                    <a class="navbar-brand text-black" href="index.php">
+                        <h4><i>Point Of Sales</i></h4>
+                    </a>
                     <div class="collapse navbar-collapse justify-content-end">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li class="nav-item dropdown profile-dropdown p-1 me-2">
@@ -63,7 +66,9 @@ if (!$view) {
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                                     <li><a class="dropdown-item" href="index.php"><?= $_SESSION['nama_user']; ?></a></li>
                                     <li><a class="dropdown-item" href="index.php">user : <?= $_SESSION['username']; ?></a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
                                 </ul>
                             </li>
@@ -87,23 +92,23 @@ if (!$view) {
 
             <div class="container mt-3 table-responsive">
                 <table class="table align-middle table-sm">
-                <?php
-if (isset($_SESSION['success']) && $_SESSION['success'] != '') { ?>
-    <div class="alert alert-success ps-4" role="alert">
-        <?= $_SESSION['success'] ?>
-    </div>
-    <?php
-    unset($_SESSION['success']);
-}
+                    <?php
+                    if (isset($_SESSION['success']) && $_SESSION['success'] != '') { ?>
+                        <div class="alert alert-success ps-4" role="alert">
+                            <?= $_SESSION['success'] ?>
+                        </div>
+                    <?php
+                        unset($_SESSION['success']);
+                    }
 
-if (isset($_SESSION['error']) && $_SESSION['error'] != '') { ?>
-    <div class="alert alert-danger ps-4" role="alert">
-        <?= $_SESSION['error'] ?>
-    </div>
-    <?php
-    unset($_SESSION['error']);
-}
-?>
+                    if (isset($_SESSION['error']) && $_SESSION['error'] != '') { ?>
+                        <div class="alert alert-danger ps-4" role="alert">
+                            <?= $_SESSION['error'] ?>
+                        </div>
+                    <?php
+                        unset($_SESSION['error']);
+                    }
+                    ?>
 
                     <thead class="table-light">
                         <tr>
@@ -124,7 +129,7 @@ if (isset($_SESSION['error']) && $_SESSION['error'] != '') { ?>
                                 <td><?= $row['nama_user'] ?></td>
                                 <td><?= $row['username'] ?></td>
                                 <td><?= $row['password'] ?></td>
-                                <td><?= $row['nama_role'] ?></td>
+                                <td><?= $row['nama'] ?></td>
                                 <td><?= $row['nomor_handphone'] ?></td>
                                 <td><?= $row['alamat'] ?></td>
                                 <td>

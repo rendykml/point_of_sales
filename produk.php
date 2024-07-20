@@ -54,7 +54,9 @@ if (!$view) {
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg bg-light" id="top_nav">
                 <div class="container-fluid pt-2 ps-4">
-                    <a class="navbar-brand text-black" href="index.php"><h4><i>Point Of Sales</i></h4></a>
+                    <a class="navbar-brand text-black" href="index.php">
+                        <h4><i>Point Of Sales</i></h4>
+                    </a>
                     <div class="collapse navbar-collapse justify-content-end">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                             <li class="nav-item dropdown profile-dropdown p-1 me-2">
@@ -64,7 +66,9 @@ if (!$view) {
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                                     <li><a class="dropdown-item" href="index.php"><?= $_SESSION['nama_user']; ?></a></li>
                                     <li><a class="dropdown-item" href="index.php">user : <?= $_SESSION['username']; ?></a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><a class="dropdown-item text-danger" href="logout.php">Logout</a></li>
                                 </ul>
                             </li>
@@ -111,7 +115,7 @@ if (!$view) {
                                 <th class="ps-5"><?= $row['id_produk'] ?></th>
                                 <td><?= $row['nama_produk'] ?></td>
                                 <td><?= $row['harga'] ?></td>
-                                <td><?= $row['jumlah'] ?></td>
+                                <td><?= $row['jumlah'] ?> Pcs</td>
                                 <td>
                                     <!-- Link Edit dan Hapus -->
                                     <a class="btn btn-warning" href="produk_edit.php?id=<?= $row['id_produk']; ?>">Edit</a>
